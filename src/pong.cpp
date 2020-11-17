@@ -2,38 +2,36 @@
 
 using namespace std;
 
-Pong::Pong() {
+Pong::Pong()
+{
     cout << "instantiating game..." << endl;
 }
 
-Pong::~Pong() {
-    if (window != nullptr) {
-        delete window;
-    }
-
-    if (shape != nullptr) {
-        delete shape;
+Pong::~Pong()
+{
+    if (window != nullptr)
+    {
+        SDL_DestroyWindow(window);
+        // delete window;
     }
 
     cout << "destroying game..." << endl;
 }
 
-void Pong::init() {
+void Pong::init()
+{
     cout << "init variables..." << endl;
 
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_TITLE);
-
-    mousePosition.x = 0;
-    mousePosition.y = 0;
-
-    shape = new sf::CircleShape(50);
-    shape->setFillColor(sf::Color::White);
+    window = SDL_CreateWindow(GAME_TITLE, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 }
 
-void Pong::eventLoop() {
-    cout << "starting event loop..." << endl;
+void Pong::start()
+{
+    cout << "starting game..." << endl;
+    running = true;
 
-    while (window->isOpen()) {
+    while (running)
+    {
         this->processEvents();
         this->updateState();
         this->render();
@@ -42,31 +40,35 @@ void Pong::eventLoop() {
     cout << "stopping event loop..." << endl;
 }
 
-void Pong::processEvents() {
-    while (window->pollEvent(event)) {
+void Pong::processEvents()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
         switch (event.type)
         {
-            case sf::Event::Closed:
-                window->close();
+        case SDL_WINDOWEVENT:
+            switch (event.window.event)
+            {
+            case SDL_WINDOWEVENT_CLOSE:
+                running = false;
                 break;
-            case sf::Event::MouseMoved:
-                mousePosition.x = event.mouseMove.x;
-                mousePosition.y = event.mouseMove.y;
-                break;
+
             default:
                 break;
+            }
+        default:
+            break;
         }
     }
 }
 
-void Pong::updateState() {
-    shape->setPosition(mousePosition.x - 50, mousePosition.y - 50);
+void Pong::updateState()
+{
+
 }
 
-void Pong::render() {
-    window->clear(sf::Color::Black);
+void Pong::render()
+{
 
-    window->draw(*shape);
-
-    window->display();
 }

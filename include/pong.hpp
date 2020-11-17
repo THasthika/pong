@@ -2,7 +2,7 @@
 #define PONG_HPP
 
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include <SDL.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -13,11 +13,8 @@ class Pong {
 
 
 private:
-    sf::RenderWindow* window;
-    sf::Event event;
-    sf::Vector2i mousePosition;
-
-    sf::CircleShape* shape;
+    bool running = false;
+    SDL_Window *window = nullptr;
 
     void processEvents();
     void updateState();
@@ -28,7 +25,7 @@ public:
     virtual ~Pong();
 
     void init();
-    void eventLoop();
+    void start();
 
 };
 
