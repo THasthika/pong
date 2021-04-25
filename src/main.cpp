@@ -1,9 +1,11 @@
+#define SDL_MAIN_HANDLED
+
 #include <iostream>
 #include <SDL.h>
 
 #include "../include/pong.hpp"
 
-int main() {
+int main(int argc, char **argv) {
     
     std::cout << "Starting..." << std::endl;
 

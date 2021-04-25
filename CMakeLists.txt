@@ -11,6 +11,8 @@ project(
     LANGUAGES CXX
 )
 
+set (CMAKE_CXX_STANDARD 11)
+
 configure_file(
     "${PROJECT_SOURCE_DIR}/include/config.h.in"
     "${PROJECT_BINARY_DIR}/include/config.h"
@@ -21,6 +23,7 @@ add_executable(
     ${EXECUTABLE_NAME}
     src/main.cpp
     src/pong.cpp
+
     include/pong.hpp
 )
 
@@ -28,10 +31,26 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
 )
 
-# Detect and add SDL2
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(${EXECUTABLE_NAME} ${SDL2_LIBRARIES} ${SDL2_DEPENDENCIES})
+if (WIN32)
+    option(MINGW_ROOT "MINGW_ROOT" "D:/MingW")
+    set(SDL2_INCLUDE_DIRS ${MINGW_ROOT}/include/SDL2/)
+    set(SDL2_LIBRARIES
+        mingw32
+        SDL2main
+        SDL2
+    )
+    
+    include_directories(${SDL2_INCLUDE_DIRS})
+    link_directories(${MINGW_ROOT}/lib/ ${MINGW_ROOT}/mingw/lib/)
+    target_link_libraries(${EXECUTABLE_NAME} ${SDL2_LIBRARIES})
+endif (WIN32)
+
+if (NOT WIN32)
+    # Detect and add SDL2
+    find_package(SDL2 REQUIRED)
+    include_directories(${SDL2_INCLUDE_DIRS})
+    target_link_libraries(${EXECUTABLE_NAME} ${SDL2_LIBRARIES} ${SDL2_DEPENDENCIES})
+endif ()
 
 # # Detect and add SFML
 # set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
