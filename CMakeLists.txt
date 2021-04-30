@@ -22,9 +22,9 @@ configure_file(
 add_executable(
     ${EXECUTABLE_NAME}
     src/main.cpp
-    src/pong.cpp
+    src/game.cpp
 
-    include/pong.hpp
+    src/game.hpp
 )
 
 include_directories(

@@ -1,5 +1,5 @@
-#ifndef PONG_HPP
-#define PONG_HPP
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include <iostream>
 #include <SDL.h>
@@ -9,7 +9,7 @@
 
 #define GAME_TITLE "Pong"
 
-class Pong {
+class Game {
 
 
 private:
@@ -22,8 +22,8 @@ private:
     void render();
 
 public:
-    Pong();
-    virtual ~Pong();
+    Game();
+    virtual ~Game();
 
     void init();
     void start();
@@ -31,4 +31,4 @@ public:
 };
 
 
-#endif /* PONG_HPP */
+#endif /* GAME_HPP */

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <SDL.h>
 
-#include "../include/pong.hpp"
+#include "game.hpp"
 
 int main(int argc, char **argv) {
     
@@ -14,11 +14,9 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    Pong* pong = new Pong();
-    pong->init();
-    pong->start();
-
-    // SDL_CreateWindow("Hello", 200, 200, 64, 64, )
+    Game* game = new Game();
+    game->init();
+    game->start();
     
     SDL_Quit();
     return 0;

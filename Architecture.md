@@ -1,0 +1,2 @@
+- Something to draw / call SDL calls
+- Some abstraction over the SDL layer

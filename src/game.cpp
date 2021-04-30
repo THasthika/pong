@@ -1,4 +1,4 @@
-#include "../include/pong.hpp"
+#include "pong.hpp"
 
 using namespace std;
 
