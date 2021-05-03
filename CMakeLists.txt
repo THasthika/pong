@@ -22,9 +22,14 @@ configure_file(
 add_executable(
     ${EXECUTABLE_NAME}
     src/main.cpp
-    src/game.cpp
 
-    src/game.hpp
+    src/Game.cpp
+    src/game_states/MenuGameState.cpp
+
+    src/Game.hpp
+    src/interfaces/IGameEngine.hpp
+    src/interfaces/IGameState.hpp
+    src/game_states/MenuGameState.hpp
 )
 
 include_directories(

@@ -1,13 +1,37 @@
-#include "pong.hpp"
+#include <iostream>
+
+#include "interfaces/IGameState.hpp"
+
+#include "game_states/MenuGameState.hpp"
+
+#include "game.hpp"
 
 using namespace std;
 
-Pong::Pong()
+Game::Game()
 {
-    cout << "instantiating game..." << endl;
+
 }
 
-Pong::~Pong()
+Game::~Game()
+{
+
+}
+
+void Game::init()
+{
+    cout << "instantiating game..." << endl;
+
+    cout << "init variables..." << endl;
+
+    window = SDL_CreateWindow(GAME_TITLE, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    renderer = SDL_CreateRenderer(this->window, -1, 0);
+
+    IGameState* menu = new MenuGameState();
+    stack.push(menu);
+}
+
+void Game::cleanup()
 {
     if (renderer != nullptr) {
         SDL_DestroyRenderer(renderer);
@@ -19,70 +43,52 @@ Pong::~Pong()
         // delete window;
     }
 
+    while (stack.size() > 0) {
+        IGameState* state = stack.top();
+        stack.pop();
+        state->cleanup();
+    }
+
     cout << "destroying game..." << endl;
 }
 
-void Pong::init()
-{
-    cout << "init variables..." << endl;
-
-    window = SDL_CreateWindow(GAME_TITLE, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-    renderer = SDL_CreateRenderer(this->window, -1, 0);
-}
-
-void Pong::start()
+void Game::start()
 {
     cout << "starting game..." << endl;
     running = true;
 
+    uint64_t currentFrameTime = SDL_GetPerformanceCounter();
+    uint64_t lastFrameTime = 0;
+    double deltaTime = 0;
+
     while (running)
     {
+
+        lastFrameTime = currentFrameTime;
+        currentFrameTime = SDL_GetPerformanceCounter();
+        deltaTime = (double)((currentFrameTime - lastFrameTime)*1000 / (double)SDL_GetPerformanceFrequency());
+
+        currentState = stack.top();
+
         this->processEvents();
-        this->updateState();
+        this->updateState(deltaTime);
         this->render();
     }
 
     cout << "stopping event loop..." << endl;
 }
 
-void Pong::processEvents()
+void Game::processEvents()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
-    {
-        switch (event.type)
-        {
-        case SDL_WINDOWEVENT:
-            switch (event.window.event)
-            {
-            case SDL_WINDOWEVENT_CLOSE:
-                running = false;
-                break;
-
-            default:
-                break;
-            }
-            break;
-        case SDL_KEYUP:
-            switch(event.key.keysym.sym)
-            {
-                case SDLK_q:
-                    running = false;
-                    break;
-            }
-        break;
-        default:
-            break;
-        }
-    }
+    currentState->processEvents();
 }
 
-void Pong::updateState()
+void Game::updateState(double deltaTime)
 {
 
 }
 
-void Pong::render()
+void Game::render()
 {
     //Set the draw color...
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
